@@ -5,13 +5,15 @@ const { buildSchema } = require('graphql');
 const schema = buildSchema(`
 	type Query{
 		hello: String
+		testBool: Boolean
 	}
 `);
 
 const root = {
 	hello: () => {
 		return "Hello world!";
-	}
+	},
+	testBool: true
 };
 
 const app = express();
