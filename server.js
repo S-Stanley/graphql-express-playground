@@ -3,9 +3,21 @@ const { graphqlHTTP } = require('express-graphql');
 const { buildSchema } = require('graphql');
 
 const schema = buildSchema(`
+	type Person {
+		firstname: String
+		lastname: String
+	}
+	input PersonInput {
+		firstname: String!
+		lastname: String
+	}
 	type Query{
 		hello: String
-		testBool: Boolean
+		nextNumber(nb: Int!): Int
+		getFakePerson: Person
+	}
+	type Mutation{
+		createPerson(input: PersonInput): Boolean
 	}
 `);
 
@@ -13,7 +25,17 @@ const root = {
 	hello: () => {
 		return "Hello world!";
 	},
-	testBool: true
+	nextNumber: (arg) => arg.nb + 1,
+	getFakePerson: () => {
+		return {
+			firstname: "hello",
+			lastname: "world"
+		}
+	},
+	createPerson: (args) => {
+		console.log(args);
+		return (true);
+	}
 };
 
 const app = express();
@@ -23,7 +45,7 @@ app.use(
 	graphqlHTTP({
 		schema: schema,
 		rootValue: root,
-		graphiql: true,
+		graphiql: true
 	})
 );
 
